@@ -1,0 +1,14 @@
+ersion: "2"
+services:
+  mosquitto:
+    image: node:10-alpine
+    container_name: deepwater
+    network_mode: host
+    restart: always
+    volumes:
+      - /opt/deepwater/config:/deepwater/config
+      - /opt/deepwater/data:/deepwater/data
+      - /opt/deepwater/log:/deepwater/log
+    ports:
+      - "1883:1883"
+      - "3000:3000"

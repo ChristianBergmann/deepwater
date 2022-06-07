@@ -1,0 +1,101 @@
+<html>
+  <head>
+    <title>JavaScript Line Chart</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    
+
+    <style type="text/css">      
+      html, body, #container { 
+        width: 100%; height: 99%; margin: 0; padding: 0;
+      } 
+      
+    </style>
+  </head>
+  <body>  
+  <div style="margin-top:10px;text-align: center;">
+    <button id="day" type="button">current day</button>
+    <button id="week" type="button">current week</button>
+    <button id="month" type="button">current month</button>
+    <button id="year" type="button">current year</button>
+
+  </div>
+    <canvas id="container"></canvas>
+    <script>
+
+      $('#day').on('click', function(event) {
+        if (chart) chart.destroy();
+        getdata('day');
+      });
+
+      $('#week').on('click', function(event) {
+        if (chart) chart.destroy();
+        getdata('week');
+      });
+
+      $('#month').on('click', function(event) {
+        if (chart) chart.destroy();
+        getdata('month');
+      });
+
+      $('#year').on('click', function(event) {
+        getdata('year');
+      });
+
+      var chart = null;
+      var charttype = null;
+
+      function getdata(type, param) {
+        charttype = type || 'day';
+        $.ajax({
+          url : '/data',
+          type : 'GET',
+          data : {type: charttype, param: param},
+          dataType:'json',
+          success : function(data) {
+
+            let element = document.getElementById('container');
+
+            chart = new Chart(element, {
+              type: 'line',
+              data: {
+                datasets: [{
+                  label: 'Gross margin',
+                  data: data,
+                  fill: false,
+                  borderColor: 'rgb(75, 192, 192)',
+                  tension: 0.1
+                }]
+              },
+              options: {
+                onClick: (evt, el, chart) => {
+                  if (!el || el.length === 0) return;
+                  let point = chart.getElementsAtEventForMode(evt, 'point', {intersect: true}, true);
+                  var data = chart.data.datasets[point[0].datasetIndex].data[point[0].index]
+
+                  if (charttype === 'week'){
+                    chart.destroy();
+                    getdata('day', data.time);
+                  }
+
+                },
+                parsing: {
+                  xAxisKey: 'time',
+                  yAxisKey: 'value'
+                }
+              }
+            });
+
+          },
+          error : function(request, error)
+          {
+            alert("Request: "+JSON.stringify(request));
+          }
+        });
+      }
+
+      getdata();
+    </script>
+  </body>
+</html>
+

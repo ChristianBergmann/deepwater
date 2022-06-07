@@ -1,0 +1,14 @@
+{
+    "scripts": {
+        "start": "node ./src/app.js"
+    },
+    "dependencies": {
+        "@fastify/static": "^5.0.2",
+        "fastify": "^3.29.0",
+        "leveldown": "^6.1.1",
+        "levelup": "^5.1.1",
+        "moment": "^2.29.3",
+        "morgan": "^1.10.0",
+        "mqtt": "^4.3.7"
+    }
+}
