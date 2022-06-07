@@ -8,11 +8,11 @@ function start() {
     var param = {
         "clientId": "measure_app",
         "username": "xx",
-        "password": "xx",
+        "password": "xxx",
         'keepalive': 60*60
     };
 
-    var client = mqtt.connect('mqtt://159.69.86.111', param);
+    var client = mqtt.connect('mqtt://127.0.0.1', param);
 
     client.on('connect', function() {
         client.subscribe('measure', function(err) {
